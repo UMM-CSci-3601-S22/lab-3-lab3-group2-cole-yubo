@@ -4,12 +4,10 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ToDo, ToDoStatus } from './todo';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class TodosService {
+@Injectable()
+export class TodoService {
   // The URL for the users part of the server API.
-  readonly userUrl: string = environment.apiUrl + 'todos';
+  readonly todoUrl: string = environment.apiUrl + 'todos';
 
   // The private `HttpClient` is *injected* into the service
   // by the Angular framework. This allows the system to create
@@ -38,7 +36,7 @@ export class TodosService {
    *  from the server after a possibly substantial delay (because we're
    *  contacting a remote server over the Internet).
    */
-  getUsers(filters?: { status?: ToDoStatus; owner?: string; body?: string; category?: string }): Observable<ToDo[]> {
+  getTodos(filters?: { status?: ToDoStatus; owner?: string; body?: string; category?: string }): Observable<ToDo[]> {
     // `HttpParams` is essentially just a map used to hold key-value
     // pairs that are then encoded as "?key1=value1&key2=value2&…" in
     // the URL when we make the call to `.get()` below.
@@ -54,12 +52,12 @@ export class TodosService {
         httpParams = httpParams.set('body', filters.body);
       }
       if (filters.category) {
-        httpParams = httpParams.set('category', filters.category)
+        httpParams = httpParams.set('category', filters.category);
       }
     }
     // Send the HTTP GET request with the given URL and parameters.
     // That will return the desired `Observable<User[]>`.
-    return this.httpClient.get<ToDo[]>(this.userUrl, {
+    return this.httpClient.get<ToDo[]>(this.todoUrl, {
       params: httpParams,
     });
   }
@@ -70,8 +68,8 @@ export class TodosService {
    * @param id the ID of the desired user
    * @returns an `Observable` containing the resulting user.
    */
-  getUserById(id: string): Observable<ToDo> {
-    return this.httpClient.get<ToDo>(this.userUrl + '/' + id);
+  getTodoById(id: string): Observable<ToDo> {
+    return this.httpClient.get<ToDo>(this.todoUrl + '/' + id);
   }
 
   /**
