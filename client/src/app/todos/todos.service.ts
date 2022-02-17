@@ -1,14 +1,15 @@
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { User, UserRole } from './todo';
+import { ToDo, ToDoStatus } from './todo';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TodosService {
 // The URL for the users part of the server API.
-readonly userUrl: string = environment.apiUrl + 'users';
+readonly userUrl: string = environment.apiUrl + 'todos';
 
 // The private `HttpClient` is *injected* into the service
 // by the Angular framework. This allows the system to create
@@ -37,37 +38,40 @@ constructor(private httpClient: HttpClient) {
  *  from the server after a possibly substantial delay (because we're
  *  contacting a remote server over the Internet).
  */
-getUsers(filters?: { role?: UserRole; age?: number; company?: string }): Observable<User[]> {
+getUsers(filters?: { status?: ToDoStatus; owner?: string; body?: string; category?: string }): Observable<ToDo[]> {
   // `HttpParams` is essentially just a map used to hold key-value
   // pairs that are then encoded as "?key1=value1&key2=value2&…" in
   // the URL when we make the call to `.get()` below.
   let httpParams: HttpParams = new HttpParams();
   if (filters) {
-    if (filters.role) {
-      httpParams = httpParams.set('role', filters.role);
+    if (filters.status) {
+      httpParams = httpParams.set('status', filters.status);
     }
-    if (filters.age) {
-      httpParams = httpParams.set('age', filters.age.toString());
+    if (filters.owner) {
+      httpParams = httpParams.set('owner', filters.owner);
     }
-    if (filters.company) {
-      httpParams = httpParams.set('company', filters.company);
+    if (filters.body) {
+      httpParams = httpParams.set('body', filters.body);
+    }
+    if (filters.category) {
+      httpParams = httpParams.set('category', filters.category)
     }
   }
   // Send the HTTP GET request with the given URL and parameters.
   // That will return the desired `Observable<User[]>`.
-  return this.httpClient.get<User[]>(this.userUrl, {
+  return this.httpClient.get<ToDo[]>(this.userUrl, {
     params: httpParams,
   });
 }
 
 /**
- * Get the `User` with the specified ID.
+ * Get the `ToDo` with the specified ID.
  *
  * @param id the ID of the desired user
  * @returns an `Observable` containing the resulting user.
  */
-getUserById(id: string): Observable<User> {
-  return this.httpClient.get<User>(this.userUrl + '/' + id);
+getUserById(id: string): Observable<ToDo> {
+  return this.httpClient.get<ToDo>(this.userUrl + '/' + id);
 }
 
 /**
