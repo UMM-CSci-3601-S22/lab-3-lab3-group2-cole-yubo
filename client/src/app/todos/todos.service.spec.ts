@@ -63,7 +63,7 @@ describe('TodosService', () => {
     // should be our set of test todos. Because we're subscribing
     // to the result of getTodos(), this won't actually get
     // checked until the mocked HTTP request 'returns' a response.
-    // This happens when we call req.flush(testUsers) a few lines
+    // This happens when we call req.flush(testTodos) a few lines
     // down.
     todosService.getTodos().subscribe(
       todos => expect(todos).toBe(testTodos)
@@ -81,23 +81,7 @@ describe('TodosService', () => {
     req.flush(testTodos);
   });
 
-  describe('Calling getUsers() with parameters correctly forms the HTTP request', () => {
-    /*
-     * We really don't care what `getUsers()` returns in the cases
-     * where the filtering is happening on the server. Since all the
-     * filtering is happening on the server, `getUsers()` is really
-     * just a "pass through" that returns whatever it receives, without
-     * any "post processing" or manipulation. So the tests in this
-     * `describe` block all confirm that the HTTP request is properly formed
-     * and sent out in the world, but don't _really_ care about
-     * what `getUsers()` returns as long as it's what the HTTP
-     * request returns.
-     *
-     * So in each of these tests, we'll keep it simple and have
-     * the (mocked) HTTP request return the entire list `testUsers`
-     * even though in "real life" we would expect the server to
-     * return return a filtered subset of the users.
-     */
+  describe('Calling getTodos() with parameters correctly forms the HTTP request', () => {
 
     it('correctly calls api/todos with filter parameter \'status\'', () => {
       todosService.getTodos({ status: 'complete' }).subscribe(
@@ -152,13 +136,13 @@ describe('TodosService', () => {
       // Check that the request made to that URL was a GET request.
       expect(req.request.method).toEqual('GET');
 
-      // Check that the owner parameter was ''
+      // Check that the owner parameter was 'homework'
       expect(req.request.params.get('category')).toEqual('homework');
 
       req.flush(testTodos);
     });
 
-    it('correctly calls api/users with multiple filter parameters', () => {
+    it('correctly calls api/todos with multiple filter parameters', () => {
 
       todosService.getTodos({ status: 'complete', owner: 'Blanche', category: 'category' }).subscribe(
         todos => expect(todos).toBe(testTodos)
@@ -190,7 +174,7 @@ describe('TodosService', () => {
 
       todosService.getTodoById(targetId).subscribe(
         // Just confirms that getTodoById() doesn't modify the input Todo.
-        user => expect(user).toBe(targetTodo)
+        todo => expect(todo).toBe(targetTodo)
       );
 
       const expectedUrl: string = todosService.todoUrl + '/' + targetId;
@@ -201,22 +185,15 @@ describe('TodosService', () => {
     });
   });
 
-  describe('filterTodos()', () => {
-    /*
-     * Since `filterUsers` actually filters "locally" (in
-     * Angular instead of on the server), we do want to
-     * confirm that everything it returns has the desired
-     * properties. Since this doesn't make a call to the server,
-     * though, we don't have to use the mock HttpClient and
-     * all those complications.
-     */
+  describe('Testing filterTodos()', () => {
+
     it('filters by owner', () => {
-      const ownerName = 'f';
+      const ownerName = 'r';
       const filteredTodos = todosService.filterTodos(testTodos, { owner: ownerName });
-      // There should be two users with an 'i' in their
-      // name: Chris and Jamie.
+      // There should be two todos with an 'r' in the owner name.
+      // owner: Fry
       expect(filteredTodos.length).toBe(2);
-      // Every returned user's name should contain an 'i'.
+      // Every todo's owner name should contain an 'r'.
       filteredTodos.forEach(todo => {
         expect(todo.owner.indexOf(ownerName)).toBeGreaterThanOrEqual(0);
       });
@@ -225,39 +202,34 @@ describe('TodosService', () => {
     it('filters by category', () => {
       const todoCategory = 'homework';
       const filteredTodos = todosService.filterTodos(testTodos, { category: todoCategory });
-      // There should be just one user that has UMM as their company.
+      // There should be one todo that has 'homework' its category.
       expect(filteredTodos.length).toBe(1);
-      // Every returned user's company should contain 'UMM'.
+      // Every returned todo's category should contain 'homework'.
       filteredTodos.forEach(todo => {
         expect(todo.category.indexOf(todoCategory)).toBeGreaterThanOrEqual(0);
       });
     });
 
-    it('filters by body', () => {
+    it('filters by if body contains a word', () => {
       const todoBodyWord = 'magna';
-      const filteredTodos = todosService.filterTodos(testTodos, { category: todoBodyWord });
-      // There should be just one user that has UMM as their company.
-      expect(filteredTodos.length).toBe(1);
-      // Every returned user's company should contain 'UMM'.
+      const filteredTodos = todosService.filterTodos(testTodos, { contains: todoBodyWord });
+      // There should be three todos that contain 'magna' in their body.
+      expect(filteredTodos.length).toBe(3);
+      // Every returned todo's body should contain 'magna'.
       filteredTodos.forEach(todo => {
         expect(todo.body.indexOf(todoBodyWord)).toBeGreaterThanOrEqual(0);
       });
     });
 
     it('filters by owner, body and category', () => {
-      // There's only one user (Chris) whose name
-      // contains an 'i' and whose company contains
-      // an 'M'. There are two whose name contains
-      // an 'i' and two whose company contains an
-      // an 'M', so this should test combined filtering.
-      const ownerName = 'f';
+      const ownerName = 'r';
       const todoCategory = 'homework';
       const todoBodyWord = 'magna';
-      const filters = { name: ownerName, category: todoCategory, body: todoBodyWord };
+      const filters = { owner: ownerName, category: todoCategory, contains: todoBodyWord };
       const filteredTodos = todosService.filterTodos(testTodos, filters);
-      // There should be just one user with these properties.
+      // There should be just one todo with these properties.
       expect(filteredTodos.length).toBe(1);
-      // Every returned user should have _both_ these properties.
+      // Every returned todo should have all of these properties.
       filteredTodos.forEach(todo => {
         expect(todo.owner.indexOf(ownerName)).toBeGreaterThanOrEqual(0);
         expect(todo.category.indexOf(todoCategory)).toBeGreaterThanOrEqual(0);
