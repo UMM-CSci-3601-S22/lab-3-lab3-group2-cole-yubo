@@ -181,4 +181,89 @@ describe('TodosService', () => {
       req.flush(testTodos);
     });
   });
+
+  describe('getTodoById()', () => {
+    it('calls api/todos/id with the correct ID', () => {
+      // Picking a Todo "at random" from the set of Todos up at the top.
+      const targetTodo: ToDo = testTodos[1];
+      const targetId: string = targetTodo._id;
+
+      todosService.getTodoById(targetId).subscribe(
+        // Just confirms that getTodoById() doesn't modify the input Todo.
+        user => expect(user).toBe(targetTodo)
+      );
+
+      const expectedUrl: string = todosService.todoUrl + '/' + targetId;
+      const req = httpTestingController.expectOne(expectedUrl);
+      expect(req.request.method).toEqual('GET');
+
+      req.flush(targetTodo);
+    });
+  });
+
+  describe('filterTodos()', () => {
+    /*
+     * Since `filterUsers` actually filters "locally" (in
+     * Angular instead of on the server), we do want to
+     * confirm that everything it returns has the desired
+     * properties. Since this doesn't make a call to the server,
+     * though, we don't have to use the mock HttpClient and
+     * all those complications.
+     */
+    it('filters by owner', () => {
+      const ownerName = 'f';
+      const filteredTodos = todosService.filterTodos(testTodos, { owner: ownerName });
+      // There should be two users with an 'i' in their
+      // name: Chris and Jamie.
+      expect(filteredTodos.length).toBe(2);
+      // Every returned user's name should contain an 'i'.
+      filteredTodos.forEach(todo => {
+        expect(todo.owner.indexOf(ownerName)).toBeGreaterThanOrEqual(0);
+      });
+    });
+
+    it('filters by category', () => {
+      const todoCategory = 'homework';
+      const filteredTodos = todosService.filterTodos(testTodos, { category: todoCategory });
+      // There should be just one user that has UMM as their company.
+      expect(filteredTodos.length).toBe(1);
+      // Every returned user's company should contain 'UMM'.
+      filteredTodos.forEach(todo => {
+        expect(todo.category.indexOf(todoCategory)).toBeGreaterThanOrEqual(0);
+      });
+    });
+
+    it('filters by body', () => {
+      const todoBodyWord = 'magna';
+      const filteredTodos = todosService.filterTodos(testTodos, { category: todoBodyWord });
+      // There should be just one user that has UMM as their company.
+      expect(filteredTodos.length).toBe(1);
+      // Every returned user's company should contain 'UMM'.
+      filteredTodos.forEach(todo => {
+        expect(todo.body.indexOf(todoBodyWord)).toBeGreaterThanOrEqual(0);
+      });
+    });
+
+    it('filters by owner, body and category', () => {
+      // There's only one user (Chris) whose name
+      // contains an 'i' and whose company contains
+      // an 'M'. There are two whose name contains
+      // an 'i' and two whose company contains an
+      // an 'M', so this should test combined filtering.
+      const ownerName = 'f';
+      const todoCategory = 'homework';
+      const todoBodyWord = 'magna';
+      const filters = { name: ownerName, category: todoCategory, body: todoBodyWord };
+      const filteredTodos = todosService.filterTodos(testTodos, filters);
+      // There should be just one user with these properties.
+      expect(filteredTodos.length).toBe(1);
+      // Every returned user should have _both_ these properties.
+      filteredTodos.forEach(todo => {
+        expect(todo.owner.indexOf(ownerName)).toBeGreaterThanOrEqual(0);
+        expect(todo.category.indexOf(todoCategory)).toBeGreaterThanOrEqual(0);
+        expect(todo.body.indexOf(todoBodyWord)).toBeGreaterThanOrEqual(0);
+      });
+    });
+  });
+
 });
