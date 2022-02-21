@@ -27,7 +27,7 @@
     <!-- Page Break to separate List and Search cards  -->
     <br>
 
-    <div fxLayout="row wrap" >
+    <div fxLayout="row wrap">
       <div fxFlex fxFlex.gt-sm="80" fxFlexOffset.gt-sm="10" *ngIf="getTodosFromServer; else todosError">
 
         <!-- List view -->
@@ -37,10 +37,10 @@
               <h3 mat-subheader>To Do List</h3>
               <a mat-list-item *ngFor="let todo of this.filteredTodos" [routerLink]="['/todos', todo._id]"
                 class="todos-list-item" data-test="todoListItem">
-                <h2 matLine class="todo-list-owner"> {{todo.owner}} </h2>
-                <p matLine class="todo-list-status"> {{todo.status}} </p>
-                <h4 matLine class="todo-list-category"> {{todo.category}} </h4>
-                <p matLine class="todo-list-body"> {{todo.body}} </p>
+                <h2 matLine class="todo-list-owner">{{todo.owner}}</h2>
+                <p matLine class="todo-list-status">{{todo.status}}</p>
+                <h4 matLine class="todo-list-category">{{todo.category}}</h4>
+                <p matLine class="todo-list-body">{{todo.body}}</p>
               </a>
             </mat-nav-list>
           </mat-card-content>

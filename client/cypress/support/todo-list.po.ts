@@ -24,7 +24,7 @@ export class TodoListPage {
    *   the `.todo-list-item` DOM elements.
    */
   getTodoListItems() {
-    return cy.get('.todo-nav-list .todo-list-item');
+    return cy.get('.todo-nav-list .todos-list-item');
   }
 
   /**
