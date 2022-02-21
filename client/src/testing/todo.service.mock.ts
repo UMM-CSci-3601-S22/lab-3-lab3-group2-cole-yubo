@@ -48,7 +48,7 @@ export class MockTodoService extends TodoService {
     super(null);
   }
 
-  getUsers(filters: { owner?: string; status?: ToDoStatus; category?: string }): Observable<ToDo[]> {
+  getTodos(filters: { owner?: string; status?: ToDoStatus; category?: string }): Observable<ToDo[]> {
     // Our goal here isn't to test (and thus rewrite) the service, so we'll
     // keep it simple and just return the test todos regardless of what
     // filters are passed in.
@@ -58,7 +58,7 @@ export class MockTodoService extends TodoService {
     return of(MockTodoService.testTodos);
   }
 
-  getUserById(id: string): Observable<ToDo> {
+  getTodosById(id: string): Observable<ToDo> {
     // If the specified ID is for the first test todo,
     // return that todo, otherwise return `null` so
     // we can test illegal todo requests.
