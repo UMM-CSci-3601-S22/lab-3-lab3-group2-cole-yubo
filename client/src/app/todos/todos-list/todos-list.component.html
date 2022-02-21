@@ -2,7 +2,7 @@
   <div fxFlex fxFlex.gt-sm="80" fxFlexOffset.gt-sm="10">
     <!-- Card at the top of page that user enters search queries into -->
     <mat-card class="search-card">
-      <mat-card-title class="todos-list-title">Todos</mat-card-title>
+      <mat-card-title class="todos-list-title">Find To Dos</mat-card-title>
       <mat-card-content fxLayout="column">
         <div fxLayout="row wrap" fxLayoutGap="10px">
           <!-- Examples of filtering in Angular (Client Side) -->
@@ -14,8 +14,8 @@
             <mat-hint>Filtered on client</mat-hint>
           </mat-form-field>
           <mat-form-field class="input-field">
-            <!-- Search Box for Company filtering -->
-            <mat-label>Company</mat-label>
+            <!-- Search Box for Category filtering -->
+            <mat-label>Category</mat-label>
             <input matInput id="user-company-input" placeholder="Filter by company" [(ngModel)]="todoCategory"
               (input)="updateFilter()">
             <mat-hint>Filtered on client</mat-hint>
