@@ -33,8 +33,8 @@ export class TodoListPage {
    *
    * @param listItem The todo item
    */
-  clickTodoItem(listItem: Cypress.Chainable<JQuery<HTMLElement>>) {
-    return listItem.find<HTMLButtonElement>('[data-test="todoListItem"]').click();
+   clickTodoItem() {
+    return cy.get('.todo-nav-list .todos-list-item').eq(0).click();
   }
 
 }
