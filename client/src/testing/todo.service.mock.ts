@@ -58,7 +58,7 @@ export class MockTodoService extends TodoService {
     return of(MockTodoService.testTodos);
   }
 
-  getTodosById(id: string): Observable<ToDo> {
+  getTodoById(id: string): Observable<ToDo> {
     // If the specified ID is for the first test todo,
     // return that todo, otherwise return `null` so
     // we can test illegal todo requests.
