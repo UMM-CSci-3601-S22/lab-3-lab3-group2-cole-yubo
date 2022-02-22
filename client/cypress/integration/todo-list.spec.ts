@@ -42,10 +42,10 @@ describe('Todo list', () => {
     // Filter for category 'homework'
     cy.get('#todo-contains-input').type('esse');
 
-    // All of the todos should have the category filtering by, in this case 'Fry'
-    page.getTodoListItems().each($item => {
-      cy.wrap($item).find('.todo-list-body').should('have.text', 'esse');
-    });
+    // All of the todos body should contain 'esse'
+    page.getTodoListItems().find('.todo-list-body').each($item =>
+      expect($item.text().toLowerCase()).to.contain('esse')
+    );
   });
 
   it('Should click a todo item and go to the right URL', () => {
