@@ -1,6 +1,6 @@
 <div fxLayout="row">
   <div fxFlex fxFlex.gt-sm="80" fxFlexOffset.gt-sm="10">
-    <!-- Card at the top of page that user enters search queries into -->
+    <!-- Card at the top of page that todo enters search queries into -->
     <mat-card class="search-card">
       <mat-card-title class="todos-list-title">Find To Dos</mat-card-title>
       <mat-card-content fxLayout="column">
@@ -16,7 +16,14 @@
           <mat-form-field class="input-field">
             <!-- Search Box for Category filtering -->
             <mat-label>Category</mat-label>
-            <input matInput id="todo-category-input" placeholder="Filter by company" [(ngModel)]="todoCategory"
+            <input matInput id="todo-category-input" placeholder="Filter by Category" [(ngModel)]="todoCategory"
+              (input)="updateFilter()">
+            <mat-hint>Filtered on client</mat-hint>
+          </mat-form-field>
+          <mat-form-field class="input-field">
+            <!-- Search Box for Category filtering -->
+            <mat-label>Body Contains</mat-label>
+            <input matInput id="todo-contains-input" placeholder="Filter by body keyword" [(ngModel)]="todoBody"
               (input)="updateFilter()">
             <mat-hint>Filtered on client</mat-hint>
           </mat-form-field>
@@ -53,7 +60,7 @@
 
   <!-- Maybe this should be a pop-up instead of just a text message? Not sure. -->
   <ng-template #todosError>
-    <div fxFlex fxFlex.gt-sm="80" fxFlexOffset.gt-sm="10" class="user-error">
+    <div fxFlex fxFlex.gt-sm="80" fxFlexOffset.gt-sm="10" class="todo-error">
       <mat-error>
         There was a problem loading the todos. Possibly the server is down or perhaps there are network
         issues.

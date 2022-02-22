@@ -38,15 +38,25 @@ describe('Todo list', () => {
     });
   });
 
+  it('Should type something in the "Body Contains" filter and check that it returned correct elements', () => {
+    // Filter for category 'homework'
+    cy.get('#todo-contains-input').type('esse');
+
+    // All of the todos should have the category filtering by, in this case 'Fry'
+    page.getTodoListItems().each($item => {
+      cy.wrap($item).find('.todo-list-body').should('have.text', 'esse');
+    });
+  });
+
   it('Should click a todo item and go to the right URL', () => {
     page.getTodoListItems().first().then((todo) => {
       const firstTodoOwner = todo.find('.todo-list-owner').text();
       const firstTodoCategory = todo.find('.todo-list-category').text();
 
-      // When the view profile button on the first user card is clicked, the URL should have a valid mongo ID
+      // When a todo is clicked on, the first todo card is clicked, the URL should have a valid mongo ID
       page.clickTodoItem();
 
-      // The URL should contain '/users/' (note the ending slash) and '/users/' should be followed by a mongo ID
+      // The URL should contain '/todos/' (note the ending slash) and '/todos/' should be followed by a mongo ID
       cy.url()
         .should('contain', '/todos/')
         .should('match', /.*\/todos\/[0-9a-fA-F]{24}$/);

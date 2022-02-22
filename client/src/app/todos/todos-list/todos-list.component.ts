@@ -17,6 +17,7 @@ public todoID: string;
 public todoStatus: ToDoStatus;
 public todoOwner: string;
 public todoCategory: string;
+public todoBody: string;
 // public viewType: 'card' | 'list' = 'card';
 
 /**
@@ -37,7 +38,8 @@ constructor(private todoService: TodoService, private snackBar: MatSnackBar) {
 getTodosFromServer() {
   this.todoService.getTodos({
     owner: this.todoOwner,
-    category: this.todoStatus
+    category: this.todoCategory,
+    status: this.todoStatus,
   }).subscribe(returnedTodos => {
     // This inner function passed to `subscribe` will be called
     // when the `Observable` returned by `getUsers()` has one
@@ -64,7 +66,7 @@ getTodosFromServer() {
  */
 public updateFilter() {
   this.filteredTodos = this.todoService.filterTodos(
-    this.serverFilteredTodos, { owner: this.todoOwner, category: this.todoCategory }
+    this.serverFilteredTodos, { owner: this.todoOwner, category: this.todoCategory, contains: this.todoBody }
   );
 }
 

@@ -95,7 +95,7 @@ describe('TodosListComponent', () => {
     expect(todoList.serverFilteredTodos.some((todo: ToDo) => todo.owner === 'FooBar')).toBe(false);
   });
 
-  it('has one todo with category software design', () => {
+  it('has two todos with category software design', () => {
     expect(todoList.serverFilteredTodos.filter((todo: ToDo) => todo.category === 'software design').length).toBe(2);
   });
 });
