@@ -37,4 +37,13 @@ export class TodoListPage {
     return cy.get('.todo-nav-list .todos-list-item').eq(0).click();
   }
 
+  /**
+   * Selects a status to filter in the "status" selector.
+   *
+   * @param value The status *value* to select, this is what's found in the mat-option "value" attribute.
+   */
+   selectStatus(value: string) {
+    return cy.get('[data-test="todoStatusSelect"]').click().get(`mat-option[value="${value}"]`).click();
+  }
+
 }
