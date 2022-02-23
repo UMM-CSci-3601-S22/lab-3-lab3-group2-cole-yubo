@@ -27,6 +27,15 @@
               (input)="updateFilter()">
             <mat-hint>Filtered on client</mat-hint>
           </mat-form-field>
+          <mat-form-field class="input-field">
+            <mat-label>Status</mat-label>
+            <mat-select (selectionChange)="getTodosFromServer()" [(ngModel)]="todoStatus" data-test="todoStatusSelect">
+              <mat-option>--</mat-option>
+              <mat-option value="complete">Complete</mat-option>
+              <mat-option value="incomplete">Incomplete</mat-option>
+            </mat-select>
+            <mat-hint>Filtered on server</mat-hint>
+          </mat-form-field>
         </div>
       </mat-card-content>
     </mat-card>
@@ -45,7 +54,10 @@
               <a mat-list-item *ngFor="let todo of this.filteredTodos" [routerLink]="['/todos', todo._id]"
                 class="todos-list-item" data-test="todoListItem">
                 <h2 matLine class="todo-list-owner">{{todo.owner}}</h2>
-                <p matLine class="todo-list-status">{{todo.status}}</p>
+                <div class="todo-list-status">
+                  <mat-icon *ngIf="todo.status">done</mat-icon>
+                  <mat-icon *ngIf="!todo.status">close</mat-icon>
+                </div>
                 <h4 matLine class="todo-list-category">{{todo.category}}</h4>
                 <p matLine class="todo-list-body">{{todo.body}}</p>
               </a>
